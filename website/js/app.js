@@ -1,7 +1,7 @@
 // API variables
 
-let baseURL = "http://api.openweathermap.org/data/2.5/weather?q=";
-const apiKey = "&appid=036f458cba6d33bad05e4ba4d663d980";
+let baseURL = "http://api.openweathermap.org/data/2.5/weather?zip=";
+const apiKey = ",us&appid=036f458cba6d33bad05e4ba4d663d980";
 const metric = "&units=metric"
 
 // Event listener for the click
@@ -11,15 +11,15 @@ document.getElementById('generate').addEventListener('click', performAction);
 // Getting the data from the website, merging, sending and updading the UI
 
 function performAction(e) {
-    const city = document.getElementById('city').value;
+    const zip = document.getElementById('zip').value;
     const mood = document.getElementById('feelings').value;
-    getWeather(baseURL, city, apiKey, metric, mood)
+    getWeather(baseURL, zip, apiKey, metric, mood)
     .then(function(data){
         let temp = data.main.temp;
         let d = new Date();
         let date = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
-        console.log(city, date, temp, mood);
-        postData('/addWeather', {name: city, time: date, temp: temp, mood: mood})
+        console.log(zip, date, temp, mood);
+        postData('/addWeather', {name: zip, time: date, temp: temp, mood: mood})
         .then(
             updateUI()
         )
@@ -29,8 +29,8 @@ function performAction(e) {
 
 // Retrieveing the weather data from the API
 
-const getWeather = async (baseURL, city, key, metric) => {
-    const res = await fetch(baseURL+city+key+metric) 
+const getWeather = async (baseURL, zip, key, metric) => {
+    const res = await fetch(baseURL+zip+key+metric) 
     try {
     const data = await res.json();
     return data;   
@@ -68,7 +68,6 @@ const updateUI = async () => {
     text.innerHTML = `<div><span class="temp">${allData[lastPost].temp}°c </span>
                     </div>
                     <div>
-                    ${allData[lastPost].name}<br>
                     ${allData[lastPost].time}<br>
                     ${allData[lastPost].mood}
                     </div>`;
